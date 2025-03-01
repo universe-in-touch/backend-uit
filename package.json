@@ -1,0 +1,29 @@
+{
+  "name": "uit-backend",
+  "version": "1.0.0",
+  "description": "",
+  "main": "dist/index.js",
+  "scripts": {
+    "build": "tsc",
+    "dev": "vite"
+  },
+  "dependencies": {
+    "@netlify/functions": "^3.0.0",
+    "axios": "^1.7.9",
+    "cors": "^2.8.5",
+    "dotenv": "^16.4.7",
+    "express": "^4.21.2",
+    "fs": "^0.0.1-security",
+    "https": "^1.0.0",
+    "jsonwebtoken": "^9.0.2",
+    "uuid": "^11.1.0",
+    "xrpl": "^4.2.0",
+    "xumm": "^1.8.0"
+  },
+  "devDependencies": {
+    "typescript": "^5.5.3",
+    "vite": "^6.1.1"
+  },
+  "private": true,
+  "type": "module"
+}

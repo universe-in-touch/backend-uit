@@ -1,0 +1,19 @@
+{
+	"geolocation": {
+		"data": {
+			"city": "Batumi",
+			"country": {
+				"code": "GE",
+				"name": "Georgia"
+			},
+			"subdivision": {
+				"code": "AJ",
+				"name": "Adjara"
+			},
+			"timezone": "Asia/Tbilisi",
+			"latitude": 41.6473,
+			"longitude": 41.6258
+		},
+		"timestamp": 1740848684199
+	}
+}
