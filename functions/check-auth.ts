@@ -1,7 +1,7 @@
 import axios from "axios";
-import { Handler, HandlerEvent } from "@netlify/functions";
+import { Handler, HandlerEvent, HandlerResponse } from "@netlify/functions";
 
-export const handler: Handler = async (event: HandlerEvent) => {
+export const handler: Handler = async (event: HandlerEvent): Promise<HandlerResponse> => {
     const origin = event.headers.origin || '*'; // Если origin не задан, ставим '*'
 
     // Ответ для preflight-запроса (OPTIONS)
