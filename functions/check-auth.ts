@@ -2,14 +2,19 @@ import axios from "axios";
 import { Handler, HandlerEvent } from "@netlify/functions";
 
 export const handler: Handler = async (event: HandlerEvent) => {
-    const allowedOrigins = ['https://localhost:3000', 'https://твоя-гитхаб-страница.github.io'];
-    const origin = event.headers.origin || '*'; // Если origin не задан, ставим *
+    const origin = event.headers.origin || '*'; // Если origin не задан, ставим '*'
 
-    // Если домен не в списке разрешенных, возвращаем ошибку
-    if (!allowedOrigins.includes(origin) && origin !== '*') {
+    // Ответ для preflight-запроса (OPTIONS)
+    if (event.httpMethod === "OPTIONS") {
         return {
-            statusCode: 403,
-            body: JSON.stringify({ error: "Доступ запрещен" }),
+            statusCode: 204,
+            headers: {
+                "Access-Control-Allow-Origin": "*", // Разрешаем доступ с любых доменов
+                "Access-Control-Allow-Methods": "GET, POST, OPTIONS",
+                "Access-Control-Allow-Headers": "Content-Type, X-API-Key, X-API-Secret",
+                "Access-Control-Max-Age": "86400", // Кеширование ответа для CORS
+            },
+            body: '',
         };
     }
 
@@ -18,6 +23,10 @@ export const handler: Handler = async (event: HandlerEvent) => {
         if (!payloadId) {
             return {
                 statusCode: 400,
+                headers: {
+                    "Access-Control-Allow-Origin": "*", // Разрешаем доступ с любых доменов
+                    "Access-Control-Allow-Headers": "Content-Type",
+                },
                 body: JSON.stringify({ error: "Missing payload_id" }),
             };
         }
