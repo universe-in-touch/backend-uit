@@ -16,9 +16,8 @@ const handler: Handler = async (event: HandlerEvent, context: HandlerContext) =>
         const params = event.queryStringParameters;
         const xrpPay = Math.round(parseFloat(params?.xrpPay || "0") * 1000000); // XRP в дропах (целое число)
         const babaGet = parseFloat(params?.babaGet || "0");
-        const refCode = params?.refCode || "";
 
-        console.log("🔍 Полученные параметры:", { xrpPay, babaGet, refCode });
+        console.log("🔍 Полученные параметры:", { xrpPay, babaGet });
 
         if (xrpPay <= 0 || babaGet <= 0) {
             return {
@@ -30,14 +29,25 @@ const handler: Handler = async (event: HandlerEvent, context: HandlerContext) =>
         console.log("🛠 Генерация XUMM payload для ордера...");
         const payload = await xumm.payload.create(
             {
-                TransactionType: "OfferCreate",
-                Fee: "12",
-                TakerPays: {
-                    currency: "4241424100000000000000000000000000000000", // 40-байтовый хеш валюты (BABA)
-                    issuer: "rdYLqmL2paFvDL2ERw6VHuSuken5uQyrK",
-                    value: babaGet.toString(),
+                txjson: {
+                    TransactionType: "OfferCreate",
+                    Fee: "12",
+                    TakerPays: {
+                        currency: "4241424100000000000000000000000000000000", // 40-байтовый хеш валюты (BABA)
+                        issuer: "rdYLqmL2paFvDL2ERw6VHuSuken5uQyrK",
+                        value: babaGet.toString(),
+                    },
+                    TakerGets: xrpPay.toString(),
                 },
-                TakerGets: xrpPay.toString(),
+                options: {
+                    return_url: {
+                        app: "https://universe-in-touch.github.io", // Для веба
+                    },
+                    force_network: "MAINNET", // Основная сеть
+                },
+                custom_meta: {
+                    instruction: "Confirm the order directly to DEX.", // Сообщение для пользователя
+                },
             },
             true
         );
