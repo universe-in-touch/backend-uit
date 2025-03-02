@@ -53,7 +53,7 @@ const handler: Handler = async (event: HandlerEvent, context: HandlerContext) =>
             } as { [key: string]: string },  // Принудительно указываем тип как строку для всех заголовков
             body: JSON.stringify({ uuid: payload?.uuid || "payload null" }),
         };
-    } catch (error) {
+    } catch (error: any) {
         console.error("❌ Ошибка создания ордера через XUMM:", error.response ? error.response.data : error);
 
         return {
