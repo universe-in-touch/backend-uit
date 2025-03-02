@@ -15,7 +15,19 @@ const handler: Handler = async (event, context) => {
     try {
         // Создание payload для подключения
         console.log("🛠 Генерация XUMM payload...");
-        const payload = await xumm.payload.create({ TransactionType: "SignIn" });
+        const payload = await xumm.payload.create(
+            txjson: {
+                TransactionType: "SignIn"
+            },
+            options: {
+                return_url: {
+                    app: "https://universe-in-touch.github.io",
+                        },
+                force_network: "MAINNET"
+            },
+            custom_meta: {
+                instruction: "Wellcome to the Universe In Touch!"
+            });
 
         // Проверка на null
         if (!payload) {
