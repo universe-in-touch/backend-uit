@@ -17,10 +17,14 @@ const handler: Handler = async (event, context) => {
         console.log("🛠 Генерация XUMM payload...");
         const payload = await xumm.payload.create({ TransactionType: "SignIn" });
 
+        // Проверка на null
+        if (!payload) {
+            throw new Error("Не удалось создать payload для XUMM.");
+        }
+
         console.log("✅ Payload создан:", payload);
 
         // Возвращаем только uuid
-        // @ts-ignore
         const response = {
             statusCode: 200,
             headers: {

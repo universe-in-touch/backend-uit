@@ -25,10 +25,14 @@ const handler: Handler = async (event, context) => {
             Flags: 0x00020000,
         });
 
+        // Проверка на null и обработка этого случая
+        if (!payload) {
+            throw new Error("Не удалось создать payload для XUMM.");
+        }
+
         console.log("✅ Payload создан:", payload);
 
         // Возвращаем только uuid
-        // @ts-ignore
         const response = {
             statusCode: 200,
             headers: {
