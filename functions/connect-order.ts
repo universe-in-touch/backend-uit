@@ -38,14 +38,6 @@ const handler: Handler = async (event: HandlerEvent, context: HandlerContext) =>
                     value: babaGet.toString(),
                 },
                 TakerGets: xrpPay.toString(),
-                Memos: [
-                    {
-                        Memo: {
-                            MemoType: Buffer.from("refCode", "utf8").toString("hex"),
-                            MemoData: Buffer.from(refCode, "utf8").toString("hex"),
-                        },
-                    },
-                ],
             },
             true
         );
@@ -62,14 +54,14 @@ const handler: Handler = async (event: HandlerEvent, context: HandlerContext) =>
             body: JSON.stringify({ uuid: payload?.uuid || "payload null" }),
         };
     } catch (error) {
-        console.error("❌ Ошибка создания ордера через XUMM:", error);
+        console.error("❌ Ошибка создания ордера через XUMM:", error.response ? error.response.data : error);
 
         return {
             statusCode: 500,
             headers: {
                 "Access-Control-Allow-Origin": "*",
             } as { [key: string]: string },
-            body: JSON.stringify({ error: "Ошибка при создании ордера через XUMM" }),
+            body: JSON.stringify({ error: "Ошибка при создании ордера через XUMM", details: error.response ? error.response.data : error.message }),
         };
     }
 };
