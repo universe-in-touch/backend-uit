@@ -3,9 +3,10 @@ import { Handler, HandlerEvent } from "@netlify/functions";
 
 export const handler: Handler = async (event: HandlerEvent) => {
     const allowedOrigins = ['https://localhost:3000', 'https://твоя-гитхаб-страница.github.io'];
-    const origin = event.headers.origin || '';
+    const origin = event.headers.origin || '*'; // Если origin не задан, ставим *
 
-    if (!allowedOrigins.includes(origin)) {
+    // Если домен не в списке разрешенных, возвращаем ошибку
+    if (!allowedOrigins.includes(origin) && origin !== '*') {
         return {
             statusCode: 403,
             body: JSON.stringify({ error: "Доступ запрещен" }),
@@ -36,7 +37,6 @@ export const handler: Handler = async (event: HandlerEvent) => {
         const signed = xummResponse.data.meta.signed;
         const expired = xummResponse.data.meta.expired;
 
-
         let status: "signed" | "rejected" | "expired" | "pending";
 
         if (expired) {
@@ -52,7 +52,7 @@ export const handler: Handler = async (event: HandlerEvent) => {
         return {
             statusCode: 200,
             headers: {
-                "Access-Control-Allow-Origin": origin,
+                "Access-Control-Allow-Origin": "*", // Разрешаем доступ с любых доменов
                 "Access-Control-Allow-Headers": "Content-Type",
             },
             body: JSON.stringify({ status }),
@@ -62,7 +62,7 @@ export const handler: Handler = async (event: HandlerEvent) => {
         return {
             statusCode: 500,
             headers: {
-                "Access-Control-Allow-Origin": origin,
+                "Access-Control-Allow-Origin": "*", // Разрешаем доступ с любых доменов
                 "Access-Control-Allow-Headers": "Content-Type",
             },
             body: JSON.stringify({ error: "Internal Server Error" }),
