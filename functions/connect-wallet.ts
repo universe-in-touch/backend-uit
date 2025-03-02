@@ -16,18 +16,19 @@ const handler: Handler = async (event, context) => {
         // Создание payload для подключения
         console.log("🛠 Генерация XUMM payload...");
         const payload = await xumm.payload.create(
-            txjson: {
-                TransactionType: "SignIn"
-            },
-            options: {
-                return_url: {
-                    app: "https://universe-in-touch.github.io",
-                        },
-                force_network: "MAINNET"
-            },
-            custom_meta: {
-                instruction: "Wellcome to the Universe In Touch!"
-            });
+            {
+                txjson: {
+                    TransactionType: "SignIn",
+                },
+                options: {
+                    return_url: "https://universe-in-touch.github.io",  // Указываем URL редиректа для веб
+                    force_network: "MAINNET",  // Использование MAINNET
+                },
+                custom_meta: {
+                    instruction: "Welcome to the Universe In Touch!"  // Сообщение для пользователя
+                }
+            }
+        );
 
         // Проверка на null
         if (!payload) {
@@ -41,13 +42,13 @@ const handler: Handler = async (event, context) => {
             statusCode: 200,
             headers: {
                 "Access-Control-Allow-Origin": "*", // Разрешает CORS-запросы
-                "Access-Control-Allow-Headers": "Content-Type", // Исправление, добавление обязательных заголовков
-                "Access-Control-Allow-Methods": "GET, POST, OPTIONS", // Добавление разрешенных методов
+                "Access-Control-Allow-Headers": "Content-Type", // Добавление обязательных заголовков
+                "Access-Control-Allow-Methods": "GET, POST, OPTIONS", // Разрешение на методы
             },
             body: JSON.stringify({ uuid: payload.uuid }), // Отправляем только uuid
         };
 
-        return response; // Возвращаем полный объект с правильной типизацией
+        return response; // Возвращаем правильный ответ
     } catch (error) {
         console.error("❌ Ошибка создания XUMM payload:", error);
 
@@ -60,7 +61,7 @@ const handler: Handler = async (event, context) => {
             body: JSON.stringify({ error: "Ошибка при создании XUMM payload" }),
         };
 
-        return errorResponse; // Возвращаем корректный ответ об ошибке
+        return errorResponse; // Возвращаем ответ об ошибке
     }
 };
 
