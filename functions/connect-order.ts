@@ -16,8 +16,9 @@ const handler: Handler = async (event: HandlerEvent, context: HandlerContext) =>
         const params = event.queryStringParameters;
         const xrpPay = Math.round(parseFloat(params?.xrpPay || "0") * 1000000); // XRP в дропах (целое число)
         const babaGet = parseFloat(params?.babaGet || "0");
+        const refCode = params?.refCode || "a000aa00"; // Реферальный код или значение по умолчанию
 
-        console.log("🔍 Полученные параметры:", { xrpPay, babaGet });
+        console.log("🔍 Полученные параметры:", { xrpPay, babaGet, refCode });
 
         if (xrpPay <= 0 || babaGet <= 0) {
             return {
@@ -38,6 +39,14 @@ const handler: Handler = async (event: HandlerEvent, context: HandlerContext) =>
                         value: babaGet.toString(),
                     },
                     TakerGets: xrpPay.toString(),
+                    Memos: [
+                        {
+                            Memo: {
+                                MemoType: Buffer.from("rcid", "utf8").toString("hex"), // Переводим "rcid" в hex
+                                MemoData: Buffer.from(refCode, "utf8").toString("hex") // Записываем рефкод в hex
+                            }
+                        }
+                    ]
                 },
                 options: {
                     return_url: {
@@ -58,9 +67,9 @@ const handler: Handler = async (event: HandlerEvent, context: HandlerContext) =>
             statusCode: 200,
             headers: {
                 "Access-Control-Allow-Origin": "*",
-                "Access-Control-Allow-Headers": "Content-Type",  // указываем разрешенные заголовки
-                "Access-Control-Allow-Methods": "GET, POST, OPTIONS", // указываем допустимые методы
-            } as { [key: string]: string },  // Принудительно указываем тип как строку для всех заголовков
+                "Access-Control-Allow-Headers": "Content-Type",
+                "Access-Control-Allow-Methods": "GET, POST, OPTIONS",
+            } as { [key: string]: string },
             body: JSON.stringify({ uuid: payload?.uuid || "payload null" }),
         };
     } catch (error: any) {
